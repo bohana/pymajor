@@ -81,12 +81,12 @@ class Note:
 
         self.note_idx = self.SCALE.index(self.canonical_note)
 
-        en_keys = [self.ENHARMONICS[x]
-                   for x in [self.note, other.note]
-                   if x in self.ENHARMONICS]
+    def __repr__(self):
+        rep = 'Note({})'.format(self.note)
+        return rep
 
-        # enharmonic means the matched note was on input
-        return any([n in [self.note, other.note] for n in en_keys])
+    def __str__(self):
+        return self.note
 
 
     def __eq__(self, other):
