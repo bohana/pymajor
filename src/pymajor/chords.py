@@ -19,6 +19,9 @@ class Chord:
         rep = 'Chord({})'.format(','.join([str(n) for n in self.chord_notes]))
         return rep
 
+    def __eq__(self, other):
+        return set(self.chord_notes) == set(other.chord_notes)
+
 
 class IntervalChord(Chord):
 

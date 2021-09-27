@@ -28,7 +28,7 @@ def test_chord_remove_dupes(notes):
     ('Bb', ['Bb', 'D', 'F'])
 ])
 def test_chord_major(key, chord_notes):
-    assert MajorTriad(key).chord_notes == tuple([Note(x) for x in chord_notes])
+    assert MajorTriad(key) == Chord(*chord_notes)
 
 
 @pytest.mark.parametrize('key, chord_notes', [
@@ -37,7 +37,7 @@ def test_chord_major(key, chord_notes):
     ('Bb', ['Bb', 'Db', 'F'])
 ])
 def test_chord_minor(key, chord_notes):
-    assert MinorTriad(key).chord_notes == tuple([Note(x) for x in chord_notes])
+    assert MinorTriad(key) == Chord(*chord_notes)
 
 
 @pytest.mark.parametrize('key, chord_notes', [
@@ -46,7 +46,7 @@ def test_chord_minor(key, chord_notes):
     ('Bb', ['Bb', 'D', 'F', 'Ab'])
 ])
 def test_chord_major_7th(key, chord_notes):
-    assert MajorTriad(key, '7m').chord_notes == tuple([Note(x) for x in chord_notes])
+    assert MajorTriad(key, '7m') == Chord(*chord_notes)
 
 
 @pytest.mark.parametrize('key, chord_notes', [
@@ -55,4 +55,4 @@ def test_chord_major_7th(key, chord_notes):
     ('Bb', ['Bb', 'D', 'F', 'A'])
 ])
 def test_chord_major_major7th(key, chord_notes):
-    assert MajorTriad(key, '7M').chord_notes == tuple([Note(x) for x in chord_notes])
+    assert MajorTriad(key, '7M') == Chord(*chord_notes)
