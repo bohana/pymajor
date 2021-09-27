@@ -96,13 +96,21 @@ class Note:
         if self.canonical_note == other.canonical_note:
             return True
 
-    def __init__(self, *args):
-        chord_notes = [x if isinstance(x, Note) else Note(x) for x in args]
+    def __add__(self, interval):
+        '''Returns note obtained by adding an interval to current note.
 
-        # remove repeats
-        unique_chords_idx = list(set([n.note_idx for n in chord_notes]))
+           Intervals can be expressed as:
+               * Obj: of the Interval class
+               * float: tones: 1.0 ==  1 tone, 0.5 == half-tone
+               * str: a well known interval obj (5, 5+, 2m, 2b, 2)
+        '''
+        if isinstance(interval, Interval):
+            sz = interval.size
+        else:
+            sz = Interval(interval).size
 
-        self.chord_notes = tuple([Note.from_idx(i) for i in unique_chords_idx])
+        # walk sz half notes from main note
+        half_notes = sz * 2
+        target = int(self.note_idx + half_notes) % len(self.SCALE)
 
-    def __contains__(self, note):
-        return note in self.chord_notes
+        return self.from_str(self.SCALE[target])
