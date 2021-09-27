@@ -1,5 +1,51 @@
 
 
+class Interval:
+
+    INTERVALS = {
+        '1': 0.0,
+        '2m': 0.5,
+        '2M': 1.0,
+        '3m': 1.5,
+        '3M': 2.0,
+        '4': 2.5,
+        '4+': 3.0,
+        '5b': 3.0,
+        '5': 3.5,
+        '5#': 4.0,
+        '6m': 4.0,
+        '6M': 4.5,
+        '7m': 5.0,
+        '7': 5.0,   # 7th minor interval also known only as 7th
+        '7M': 5.5,
+        '8': 6.0
+    }
+
+    def __init__(self, i):
+        if type(i) is float or type(i) is int:
+            reverse_map = {v: k for k, v in self.INTERVALS.items()}
+
+            if float(i) not in reverse_map:
+                raise ValueError('Size {} did not map to a known interval.'.format(i))
+
+            self._interval = reverse_map[i]
+            return
+
+        if type(i) is not str:
+            raise ValueError('Interval must be a size (number) or a known interval name')
+
+        # interval as str convert to canonical format
+        i = i.replace('-', 'm').replace('+', 'M').replace('j', '')
+        if i not in self.INTERVALS:
+            raise ValueError('Interval name {} not known.'.format(i))
+
+        self._interval = i
+
+    @property
+    def size(self):
+        return self.INTERVALS[self._interval]
+
+
 class Note:
 
     VALID_NOTES = 'C C# Db D D# Eb E F F# Gb G G# Ab A A# Bb B'.split()
