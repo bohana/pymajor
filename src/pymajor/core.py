@@ -88,6 +88,9 @@ class Note:
     def __str__(self):
         return self.note
 
+    def __hash__(self):
+        '''Make Notes hashable so they can be used as keys and in sets'''
+        return self.SCALE.index(self.canonical_note)
 
     def __eq__(self, other):
         if self.canonical_note == other.canonical_note:
