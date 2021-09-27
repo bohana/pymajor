@@ -49,12 +49,13 @@ class Interval:
 class Note:
 
     VALID_NOTES = 'C C# Db D D# Eb E F F# Gb G G# Ab A A# Bb B'.split()
+    SCALE = 'C C# D D# E F F# G G# A A# B'.split()
 
-    ENHARMONICS = {'C#': 'Db',
-                   'D#': 'Eb',
-                   'F#': 'Gb',
-                   'G#': 'Ab',
-                   'A#': 'Bb'}
+    ENHARMONICS = {'Db': 'C#',
+                   'Eb': 'D#',
+                   'Gb': 'F#',
+                   'Ab': 'G#',
+                   'Bb': 'A#'}
 
     @classmethod
     def from_str(cls, note_str):
@@ -63,20 +64,22 @@ class Note:
     @classmethod
     def from_idx(cls, note_idx):
         ''' Creates Note object from the note index (0 = C, 1 = C#, ...) '''
-        note_str = cls.VALID_NOTES[note_idx]
+        note_str = cls.SCALE[note_idx]
         return cls.from_str(note_str)
 
     def __init__(self, note):
         note = note.capitalize()  # db -> Db, etc
-        if note not in self.VALID_NOTES:
+        if note not in self.SCALE and note not in self.ENHARMONICS:
             raise ValueError('{} not one of: {}'.format(note, self.VALID_NOTES))
 
         self.note = note
-        self.note_idx = self.VALID_NOTES.index(self.note)
 
-    def __eq__(self, other):
-        if self.note == other.note:
-            return True
+        if note in self.ENHARMONICS:
+            self.canonical_note = self.ENHARMONICS[note]
+        else:
+            self.canonical_note = note
+
+        self.note_idx = self.SCALE.index(self.canonical_note)
 
         en_keys = [self.ENHARMONICS[x]
                    for x in [self.note, other.note]
@@ -86,7 +89,9 @@ class Note:
         return any([n in [self.note, other.note] for n in en_keys])
 
 
-class Chord:
+    def __eq__(self, other):
+        if self.canonical_note == other.canonical_note:
+            return True
 
     def __init__(self, *args):
         chord_notes = [x if isinstance(x, Note) else Note(x) for x in args]
